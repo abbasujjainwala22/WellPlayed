@@ -1,0 +1,27 @@
+{
+  "note": "Titles flagged sample are placeholders with made-up availability for demos. Real availability comes from TMDB when TMDB_API_KEY is set.",
+  "titles": [
+    {"id": "demo-clip", "title": "WellPlayed demo clip", "year": 2026, "type": "movie", "genres": ["demo"], "runtime": 1,
+     "availability": {"youtube": ["*"]}, "media": {"kind": "html5", "url": "/demo.webm"}},
+    {"id": "bbb", "title": "Big Buck Bunny", "year": 2008, "type": "movie", "genres": ["animation", "comedy", "family"], "runtime": 10,
+     "availability": {"youtube": ["*"]}, "media": {"kind": "youtube", "url": "YE7VzlLtp-4"}},
+    {"id": "sintel", "title": "Sintel", "year": 2010, "type": "movie", "genres": ["animation", "fantasy"], "runtime": 15,
+     "availability": {"youtube": ["*"]}, "media": {"kind": "youtube", "url": "eRsGyueVLvQ"}},
+    {"id": "tos", "title": "Tears of Steel", "year": 2012, "type": "movie", "genres": ["sci-fi"], "runtime": 12,
+     "availability": {"youtube": ["*"]}, "media": {"kind": "youtube", "url": "R6MlUcmOul8"}},
+    {"id": "s-heist", "title": "Sample: The Heist", "year": 2024, "type": "movie", "genres": ["thriller"], "runtime": 118, "sample": true,
+     "availability": {"netflix": ["US", "AU", "GB", "CA"], "prime": ["US", "GB", "IN"]}},
+    {"id": "s-station", "title": "Sample: Space Station", "year": 2023, "type": "movie", "genres": ["sci-fi"], "runtime": 126, "sample": true,
+     "availability": {"disney": ["US", "AU", "GB", "CA", "IN"], "max": ["US", "AU"]}},
+    {"id": "s-outback", "title": "Sample: Outback Drama", "year": 2022, "type": "movie", "genres": ["drama"], "runtime": 104, "sample": true,
+     "availability": {"stan": ["AU"], "binge": ["AU"], "sbs": ["AU"]}},
+    {"id": "s-cartoon", "title": "Sample: Family Cartoon", "year": 2021, "type": "movie", "genres": ["animation", "family"], "runtime": 92, "sample": true,
+     "availability": {"disney": ["US", "AU", "GB", "CA", "IN"], "netflix": ["US", "GB"], "iview": ["AU"]}},
+    {"id": "s-court", "title": "Sample: Courtroom Thriller", "year": 2020, "type": "movie", "genres": ["thriller", "drama"], "runtime": 131, "sample": true,
+     "availability": {"max": ["US", "AU", "GB"], "paramount": ["US", "AU", "GB", "CA"], "prime": ["US", "AU"]}},
+    {"id": "s-cook", "title": "Sample: Cooking Showdown", "year": 2025, "type": "movie", "genres": ["reality", "comedy"], "runtime": 95, "sample": true,
+     "availability": {"netflix": ["US", "AU", "GB", "CA", "DE", "IN"]}},
+    {"id": "s-classic", "title": "Sample: Silent Classic", "year": 1927, "type": "movie", "genres": ["classic"], "runtime": 90, "sample": true,
+     "availability": {"tubi": ["US", "CA", "AU", "GB"], "youtube": ["*"]}}
+  ]
+}

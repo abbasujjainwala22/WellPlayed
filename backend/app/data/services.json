@@ -1,0 +1,17 @@
+{
+  "note": "Indicative monthly prices in USD, for planning only. Verify before relying on them.",
+  "services": [
+    {"id": "netflix", "name": "Netflix", "free": false, "price": 15.5, "extra_member": 7.5, "regions": ["US", "AU", "GB", "CA", "DE", "IN"]},
+    {"id": "prime", "name": "Prime Video", "free": false, "price": 9.0, "extra_member": null, "regions": ["US", "AU", "GB", "CA", "DE", "IN"]},
+    {"id": "disney", "name": "Disney+", "free": false, "price": 11.0, "extra_member": null, "regions": ["US", "AU", "GB", "CA", "DE", "IN"]},
+    {"id": "max", "name": "Max", "free": false, "price": 12.0, "extra_member": 7.0, "regions": ["US", "AU", "GB", "CA", "DE"]},
+    {"id": "paramount", "name": "Paramount+", "free": false, "price": 8.0, "extra_member": null, "regions": ["US", "AU", "GB", "CA"]},
+    {"id": "apple", "name": "Apple TV+", "free": false, "price": 10.0, "extra_member": null, "regions": ["US", "AU", "GB", "CA", "DE", "IN"]},
+    {"id": "stan", "name": "Stan", "free": false, "price": 8.5, "extra_member": null, "regions": ["AU"]},
+    {"id": "binge", "name": "Binge", "free": false, "price": 9.0, "extra_member": null, "regions": ["AU"]},
+    {"id": "sbs", "name": "SBS On Demand", "free": true, "price": 0, "extra_member": null, "regions": ["AU"]},
+    {"id": "iview", "name": "ABC iview", "free": true, "price": 0, "extra_member": null, "regions": ["AU"]},
+    {"id": "tubi", "name": "Tubi", "free": true, "price": 0, "extra_member": null, "regions": ["US", "CA", "AU", "GB"]},
+    {"id": "youtube", "name": "YouTube", "free": true, "price": 0, "extra_member": null, "regions": ["*"]}
+  ]
+}
