@@ -248,7 +248,3 @@ Built and tested locally: everything in the feature list above. Known limits of 
 ## 👥 Team
 
 <!-- Team members and roles -->
-
----
-
-*Built for Sys AI Hackathon 2026.*
