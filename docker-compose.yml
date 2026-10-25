@@ -1,0 +1,21 @@
+# Optional full stack. Local dev works without this (see README).
+services:
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: wellplayed
+      POSTGRES_PASSWORD: wellplayed
+      POSTGRES_DB: wellplayed
+    ports: ["5432:5432"]
+  livekit:
+    profiles: ["voice"]
+    image: livekit/livekit-server:latest
+    command: --dev --bind 0.0.0.0
+    ports: ["7880:7880", "7881:7881", "7882:7882/udp"]
+  backend:
+    build: ./backend
+    env_file: [.env]
+    ports: ["8000:8000"]
