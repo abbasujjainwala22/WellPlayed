@@ -1,0 +1,45 @@
+/* ───────── Home: recent rooms + how it works ───────── */
+.home { display: flex; flex-direction: column; }
+.section.home-block { padding-top: 24px; padding-bottom: 24px; }
+.home-block-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+.home-block-head h2 { font-size: 22px; letter-spacing: -0.02em; font-weight: 750; margin: 0; }
+
+.recent-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.recent-card {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--radius-lg);
+  background: var(--panel); border: 1px solid var(--line); color: var(--text); transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.recent-card:hover { text-decoration: none; border-color: var(--brand-line); box-shadow: var(--shadow); transform: translateY(-1px); }
+.recent-card:focus-visible { outline: none; box-shadow: var(--ring); }
+.recent-card .grow { display: flex; flex-direction: column; gap: 2px; }
+.recent-card strong { font-weight: 650; font-size: 14.5px; }
+.recent-card .faint .mono { letter-spacing: 0.08em; font-weight: 600; }
+.recent-icon { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; flex-shrink: 0; background: var(--brand-soft); color: var(--brand-hover); }
+.recent-go { color: var(--faint); flex-shrink: 0; transition: transform 0.15s, color 0.15s; }
+.recent-card:hover .recent-go { color: var(--brand-hover); transform: translateX(2px); }
+.recent-empty {
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 28px 16px;
+  border: 1px dashed var(--line-strong); border-radius: var(--radius-lg); background: var(--panel); color: var(--muted);
+}
+.recent-empty svg { color: var(--faint); margin-bottom: 4px; }
+.recent-empty strong { color: var(--text-2); font-weight: 650; }
+.recent-empty span { max-width: 420px; font-size: 13.5px; }
+
+.how-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.how-steps li { border-top: 2px solid var(--line); padding-top: 18px; }
+.how-steps li:first-child { border-top-color: var(--brand); }
+.how-num { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--brand-hover); letter-spacing: 0.08em; }
+.how-steps h4 { font-size: 16px; margin: 8px 0 6px; }
+.how-steps p { color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+@media (max-width: 960px) { .recent-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .recent-grid, .how-steps { grid-template-columns: 1fr; }
+  .how-steps { gap: 20px; }
+  .home .section { padding-left: 16px; padding-right: 16px; }
+  .home .hero { padding-left: 16px; padding-right: 16px; }
+}
+
+/* Reely in the hero (hidden on phones to keep the start card close) */
+.home-reely { margin-top: 28px; }
+@media (max-width: 600px) { .home-reely { display: none; } }

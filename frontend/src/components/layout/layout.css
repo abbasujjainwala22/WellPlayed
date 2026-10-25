@@ -1,0 +1,51 @@
+/* ───────── App shell (Home, Settings and other non-room pages) ───────── */
+.app-shell { --nav-h: 64px; --tabbar-h: 64px; }
+
+.skip-link { position: absolute; left: 12px; top: -60px; z-index: 60; padding: 8px 14px; border-radius: var(--radius-sm); background: var(--panel); border: 1px solid var(--line-strong); color: var(--text); }
+.skip-link:focus { top: 10px; text-decoration: none; }
+
+.app-nav {
+  position: sticky; top: 0; z-index: 30; border-bottom: 1px solid var(--line);
+  background: var(--glass-nav); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+.app-nav-inner { max-width: 1200px; margin: 0 auto; height: var(--nav-h); padding: 0 24px; display: flex; align-items: center; gap: 24px; }
+.app-nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.app-nav-links a {
+  height: 36px; padding: 0 14px; display: inline-flex; align-items: center; border-radius: var(--radius-sm);
+  color: var(--text-2); font-weight: 550; font-size: 14px; transition: background 0.15s, color 0.15s;
+}
+.app-nav-links a:hover { background: var(--panel-2); color: var(--text); text-decoration: none; }
+.app-nav-links a.active { background: var(--brand-soft); color: var(--brand-hover); }
+.app-nav-links a:focus-visible, .app-tabbar a:focus-visible { outline: none; box-shadow: var(--ring); }
+
+.app-main { flex: 1; width: 100%; }
+
+.app-tabbar { display: none; }
+
+@media (max-width: 760px) {
+  .app-shell { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); }
+  .app-nav-inner { padding: 0 16px; justify-content: space-between; }
+  .app-nav-links { display: none; }
+  .app-tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: grid;
+    padding: 0 4px env(safe-area-inset-bottom); border-top: 1px solid var(--line);
+    background: var(--glass-nav); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  }
+  .app-tabbar a {
+    height: var(--tabbar-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    color: var(--muted); font-size: 11px; font-weight: 600; border-radius: 10px; min-width: 0;
+  }
+  .app-tabbar a span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 2px; }
+  .app-tabbar a:hover { text-decoration: none; color: var(--text); }
+  .app-tabbar a.active { color: var(--brand-hover); }
+  .app-shell ~ .toasts { bottom: calc(var(--tabbar-h, 64px) + 16px + env(safe-area-inset-bottom)); }
+  .app-shell .site-foot > div { padding: 20px 16px; }
+}
+
+/* Shared page scaffolding for shell pages */
+.page { max-width: 1200px; width: 100%; margin: 0 auto; padding: 40px 24px 56px; }
+.page-head { max-width: 640px; margin-bottom: 28px; }
+.page-head .eyebrow { margin-bottom: 14px; }
+.page-head h1 { font-size: clamp(28px, 4vw, 38px); letter-spacing: -0.03em; font-weight: 800; margin-bottom: 8px; }
+.page-head p { color: var(--muted); font-size: 15.5px; }
+@media (max-width: 600px) { .page { padding: 24px 16px 40px; } }
