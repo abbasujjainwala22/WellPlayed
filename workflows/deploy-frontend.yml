@@ -1,0 +1,42 @@
+name: Deploy frontend
+on:
+  push:
+    branches: [main]
+    paths: ["frontend/**", ".github/workflows/deploy-frontend.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm, cache-dependency-path: frontend/pnpm-lock.yaml }
+
+      - name: Build
+        working-directory: frontend
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }} # public backend origin, e.g. https://<app>.<region>.azurecontainerapps.io
+        run: |
+          test -n "$VITE_API_URL" || { echo "::error::Set the VITE_API_URL repository variable"; exit 1; }
+          pnpm install --frozen-lockfile
+          pnpm test
+          pnpm build
+
+      - uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: upload
+          app_location: frontend/dist
+          output_location: ""
+          skip_app_build: true
+          skip_api_build: true

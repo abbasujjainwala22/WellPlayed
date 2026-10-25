@@ -1,0 +1,122 @@
+name: Deploy backend
+on:
+  push:
+    branches: [main]
+    paths: ["backend/**", ".github/workflows/deploy-backend.yml"]
+  workflow_dispatch:
+
+permissions:
+  id-token: write # GitHub OIDC -> Azure
+  contents: read
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+env:
+  IMAGE: ${{ vars.ACR_LOGIN_SERVER }}/wellplayed-api:${{ github.sha }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: backend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen --extra voice --extra ai
+      - run: uv run ruff check .
+      - run: uv run pytest -q
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push ${{ github.sha }}
+        run: |
+          az acr login --name "${{ vars.ACR_NAME }}"
+          docker build --build-arg GIT_SHA="${{ github.sha }}" -t "$IMAGE" backend
+          docker push "$IMAGE"
+
+      - name: Deploy to Container App
+        env:
+          APP: ${{ vars.ACA_API_NAME }}
+          RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+          ACR: ${{ vars.ACR_NAME }}
+        run: |
+          az extension add --name containerapp --upgrade --only-show-errors
+          if az containerapp show --name "$APP" --resource-group "$RG" -o none 2>/dev/null; then
+            az containerapp update --name "$APP" --resource-group "$RG" --image "$IMAGE" --revision-suffix "${GITHUB_SHA::7}" -o none
+          else
+            # First deploy (subscriptions without ACR Tasks can't build in Azure, so scripts/azure-deploy.sh hands over to us).
+            # One replica: room state lives in memory.
+            az containerapp create --name "$APP" --resource-group "$RG" --environment "${{ vars.ACA_ENVIRONMENT }}" \
+              --image "$IMAGE" --registry-server "${{ vars.ACR_LOGIN_SERVER }}" --registry-username "$ACR" \
+              --registry-password "$(az acr credential show -n "$ACR" --query 'passwords[0].value' -o tsv)" \
+              --ingress external --target-port 8000 --min-replicas 1 --max-replicas 1 \
+              --revision-suffix "${GITHUB_SHA::7}" -o none
+          fi
+
+      - name: Apply runtime secrets
+        # Keys come from repository secrets (LIVEKIT_URL is a plain variable); unset ones are skipped.
+        env:
+          APP: ${{ vars.ACA_API_NAME }}
+          RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+          LIVEKIT_URL: ${{ vars.LIVEKIT_URL }}
+          LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
+          LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
+          GIPHY_API_KEY: ${{ secrets.GIPHY_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          secrets=() envs=()
+          add_secret() { # env var name, secret name
+            if [ -n "${!1:-}" ]; then secrets+=("$2=${!1}"); envs+=("$1=secretref:$2"); fi
+          }
+          add_secret LIVEKIT_API_KEY livekit-key
+          add_secret LIVEKIT_API_SECRET livekit-secret
+          add_secret GIPHY_API_KEY giphy-key
+          add_secret ANTHROPIC_API_KEY anthropic-key
+          add_secret TMDB_API_KEY tmdb-key
+          [ -n "$LIVEKIT_URL" ] && envs+=("LIVEKIT_URL=$LIVEKIT_URL")
+          [ ${#secrets[@]} -gt 0 ] && az containerapp secret set --name "$APP" --resource-group "$RG" --secrets "${secrets[@]}" -o none
+          [ ${#envs[@]} -gt 0 ] && az containerapp update --name "$APP" --resource-group "$RG" --set-env-vars "${envs[@]}" -o none
+          echo "Applied ${#secrets[@]} secret(s) and ${#envs[@]} env var(s)."
+
+      - name: Send all traffic to the newest revision
+        # In multiple-revision mode (or with traffic pinned to a revision name) a new revision gets 0% and the old build
+        # keeps serving while the deploy still looks green. One revision at a time: room state lives in memory anyway.
+        env:
+          APP: ${{ vars.ACA_API_NAME }}
+          RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+        run: |
+          az containerapp ingress traffic set --name "$APP" --resource-group "$RG" --revision-weight latest=100 -o none || true
+          az containerapp revision set-mode --name "$APP" --resource-group "$RG" --mode single -o none
+          az containerapp revision list --name "$APP" --resource-group "$RG" -o table \
+            --query "[].{name:name, active:properties.active, traffic:properties.trafficWeight, health:properties.healthState, state:properties.runningState, image:properties.template.containers[0].image}"
+
+      - name: Smoke test /healthz serves this commit
+        env:
+          APP: ${{ vars.ACA_API_NAME }}
+          RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+        run: |
+          fqdn=$(az containerapp show --name "$APP" --resource-group "$RG" --query properties.configuration.ingress.fqdn -o tsv)
+          for i in $(seq 1 30); do
+            body=$(curl -fsS "https://$fqdn/healthz" || true)
+            echo "$body"
+            case "$body" in *"$GITHUB_SHA"*) exit 0 ;; esac
+            sleep 6
+          done
+          echo "::error::https://$fqdn/healthz is not serving $GITHUB_SHA (an older revision is still live, or the new one failed to start)"
+          az containerapp show --name "$APP" --resource-group "$RG" \
+            --query "{latest:properties.latestRevisionName, latestReady:properties.latestReadyRevisionName, mode:properties.configuration.activeRevisionsMode, traffic:properties.configuration.ingress.traffic}"
+          az containerapp logs show --name "$APP" --resource-group "$RG" --type system --tail 40 || true
+          az containerapp logs show --name "$APP" --resource-group "$RG" --type console --tail 40 || true
+          exit 1
