@@ -1,0 +1,90 @@
+/* ───────── Voice pre-join ───────── */
+.prejoin { display: flex; flex-direction: column; gap: 12px; }
+.prejoin-frame {
+  position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden;
+  background: var(--panel-2); border: 1px solid var(--line); display: grid; place-items: center;
+}
+.prejoin-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: 0; }
+.prejoin-frame.live video { opacity: 1; }
+.prejoin-off { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); font-size: 12.5px; }
+.prejoin-mic {
+  position: absolute; left: 8px; bottom: 8px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(0, 0, 0, 0.55); color: #fff;
+}
+.prejoin-mic.off { background: var(--danger); }
+.prejoin-toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.prejoin-toggles button.off { color: var(--muted); }
+.prejoin .faint { line-height: 1.45; }
+
+/* ───────── Call state and people list ───────── */
+.call-state {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; color: var(--warning); background: var(--warning-soft); border: 1px solid var(--warning-line);
+}
+.voice-people li { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.voice-people li svg { flex-shrink: 0; color: var(--text-2); }
+.voice-people li.is-speaking { color: var(--success); }
+.voice-people li.is-speaking svg { color: var(--success); }
+.voice-people li svg.muted-icon { color: var(--muted); }
+.voice-people li svg.faint-icon { color: var(--faint); }
+.voice-people li svg.poor-icon { color: var(--warning); }
+.voice-unavailable {
+  display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: var(--radius);
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--warning);
+}
+.voice-unavailable > svg { flex-shrink: 0; margin-top: 2px; }
+.voice-unavailable > div { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; color: var(--text); }
+.voice-unavailable p { line-height: 1.45; }
+
+/* ───────── Microphone level test ───────── */
+.mic-test { display: flex; flex-direction: column; gap: 10px; }
+.mic-test-row { display: flex; align-items: center; gap: 10px; }
+.mic-test-row button { flex-shrink: 0; }
+.mic-meter { flex: 1; min-width: 60px; height: 8px; border-radius: 999px; background: var(--panel-3); overflow: hidden; }
+.mic-meter > span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--success); transition: width 80ms linear; }
+.mic-meter:not(.live) { opacity: 0.5; }
+.mic-test:not(.compact) { padding-bottom: 16px; }
+.mic-test.compact { gap: 8px; }
+.mic-test .faint { line-height: 1.4; }
+
+/* ───────── Camera strip and tiles ───────── */
+.camera-strip { margin-bottom: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+.camera-strip-head { display: flex; align-items: center; gap: 6px; padding: 6px 8px; flex-wrap: wrap; }
+.camera-strip-toggle { gap: 8px; padding: 0 8px; }
+.camera-strip-toggle strong { color: var(--text); font-size: 14px; }
+.camera-strip-toggle .chev { transition: transform 0.15s ease; transform: rotate(-90deg); }
+.camera-strip.open .camera-strip-toggle .chev { transform: none; }
+.camera-strip-head button.icon.off { color: var(--danger); }
+.camera-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; padding: 0 8px 8px; }
+
+.voice-tile {
+  position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: var(--radius-sm); overflow: hidden;
+  background: var(--panel-2); border: 1px solid var(--line); transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.voice-tile.is-speaking { border-color: var(--success); box-shadow: 0 0 0 2px var(--success); }
+.voice-tile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; }
+.voice-tile video.mirror { transform: scaleX(-1); }
+.voice-tile-off {
+  position: absolute; inset: 0 0 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+}
+.voice-tile-avatar {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  color: #fff; font-weight: 700; font-size: 15px; letter-spacing: 0.02em;
+}
+.voice-tile-note { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.voice-tile-overlay { position: absolute; inset: 0; pointer-events: none; }
+.voice-tile-overlay > * { pointer-events: auto; }
+.voice-tile-label {
+  position: absolute; left: 6px; bottom: 6px; display: flex; align-items: center; gap: 5px;
+  max-width: calc(100% - 12px); padding: 2px 8px; border-radius: 6px;
+  background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 11.5px; font-weight: 600;
+}
+.voice-tile-label .you { font-weight: 500; opacity: 0.75; }
+.voice-tile-icon { flex-shrink: 0; }
+.voice-tile-icon.mic-off { color: #ff8a8a; }
+.voice-tile-icon.poor { color: var(--warning); }
+
+@media (max-width: 600px) {
+  .camera-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+  .camera-grid .voice-tile { flex: 0 0 150px; scroll-snap-align: start; }
+}

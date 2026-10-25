@@ -1,0 +1,103 @@
+/* ───────── Chat: jump pill, send states, GIFs, and the emoji / GIF picker ───────── */
+
+.chat-log { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.chat-jump {
+  position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%);
+  min-height: 30px; padding: 4px 12px; font-size: 12.5px; border-radius: 999px; gap: 6px;
+  background: var(--brand); border-color: var(--brand); color: #fff; box-shadow: var(--shadow);
+}
+.chat-jump:hover:not(:disabled) { background: var(--brand-strong); border-color: var(--brand-strong); }
+.chat-jump:active:not(:disabled) { transform: translateX(-50%) translateY(1px); }
+
+/* messages this device sent that the server hasn't confirmed yet */
+.msg.pending .text, .msg.pending .chat-media { opacity: 0.6; }
+.msg.pending.failed .text { opacity: 1; }
+.msg .send-state { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 11.5px; color: var(--faint); margin-top: 2px; }
+.msg .send-state.failed { color: var(--danger); }
+.msg .send-state button.link { font-size: 11.5px; padding: 0; gap: 4px; }
+.msg .send-state button.link.muted { color: var(--muted); }
+.msg .send-state .spin { animation: spin 0.9s linear infinite; }
+html.reduce-motion .msg .send-state .spin { animation: none; }
+
+/* composer */
+.chat .composer { position: relative; }
+.composer .box button.ghost { color: var(--muted); }
+.composer .box button.ghost:hover:not(:disabled), .composer .box button.ghost.on { color: var(--text); background: var(--panel-2); }
+.composer .chat-gif-btn { font-size: 11px; font-weight: 750; letter-spacing: 0.04em; padding: 0 7px; min-height: 30px; }
+.composer .faint .offline { display: inline-flex; align-items: center; gap: 5px; color: var(--warning, var(--muted)); }
+
+/* GIFs and stickers in the log */
+.chat-media { position: relative; margin: 4px 0 2px; max-width: 100%; border-radius: var(--radius); overflow: hidden; background: var(--panel-2); }
+.chat-media.sticker { background: transparent; }
+.chat-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.chat-media.missing { width: auto; padding: 8px 10px; font-size: 12.5px; color: var(--muted); border: 1px dashed var(--line-strong); }
+.chat-media-badge {
+  position: absolute; left: 6px; bottom: 6px; padding: 1px 5px; border-radius: 4px;
+  font-size: 9.5px; font-weight: 750; letter-spacing: 0.05em; color: #fff; background: rgba(0, 0, 0, 0.55);
+}
+.chat-media-play {
+  position: absolute; left: 6px; bottom: 6px; min-height: 26px; padding: 2px 8px; font-size: 11px; border-radius: 999px;
+  color: #fff; background: rgba(0, 0, 0, 0.6); border-color: transparent;
+}
+.chat-media-play:hover:not(:disabled) { background: rgba(0, 0, 0, 0.75); border-color: transparent; }
+
+/* the pop-up picker */
+.chat-picker {
+  position: absolute; left: 10px; right: 10px; bottom: calc(100% - 4px); z-index: 30;
+  display: flex; flex-direction: column; max-height: min(430px, 64vh);
+  background: var(--panel); border: 1px solid var(--line-strong); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.companion .chat-picker { left: 0; right: 0; }
+.chat-picker-head { display: flex; align-items: center; gap: 6px; padding: 8px 8px 6px 10px; border-bottom: 1px solid var(--line); }
+.chat-picker-title { flex: 1; font-size: 13px; }
+.chat-picker-tabs { flex: 1; display: flex; gap: 4px; }
+.chat-picker-tabs [role="tab"] { min-height: 30px; padding: 4px 12px; font-size: 13px; border-radius: 999px; background: transparent; border-color: transparent; color: var(--muted); }
+.chat-picker-tabs [role="tab"]:hover:not(:disabled) { background: var(--panel-2); border-color: transparent; color: var(--text); }
+.chat-picker-tabs [role="tab"].on { background: var(--brand-soft); border-color: var(--brand-line); color: var(--brand-hover); }
+.picker-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.emoji-picker, .giphy-picker { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; padding: 8px 10px 8px; }
+
+.picker-search { display: flex; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--bg-elev, var(--bg)); color: var(--faint); }
+.picker-search:focus-within { border-color: var(--brand-line); box-shadow: var(--ring); }
+.picker-search input { flex: 1; min-width: 0; border: none; background: transparent; padding: 6px 0; min-height: 34px; }
+.picker-search input:focus { box-shadow: none; }
+.picker-note { font-size: 12px; color: var(--muted); text-align: center; padding: 6px 0; }
+.picker-note.error { color: var(--danger); }
+.emoji-heading { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); min-height: 14px; }
+
+.emoji-cats { display: flex; gap: 1px; justify-content: space-between; }
+.emoji-cats button { color: var(--faint); }
+.emoji-cats button.on { color: var(--brand-hover); background: var(--brand-soft); }
+
+.emoji-grid { flex: 1; min-height: 120px; overflow-y: auto; display: grid; grid-template-columns: repeat(8, 1fr); grid-auto-rows: 38px; align-content: start; gap: 2px; }
+.emoji-grid button {
+  min-height: 0; padding: 0; font-size: 22px; line-height: 1;
+  background: transparent; border-color: transparent; border-radius: var(--radius-sm);
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+.emoji-grid button:hover:not(:disabled) { background: var(--panel-2); border-color: transparent; }
+.emoji-grid button:focus-visible { background: var(--brand-soft); }
+
+.emoji-foot { display: flex; align-items: center; gap: 8px; min-height: 34px; padding-top: 6px; border-top: 1px solid var(--line); }
+.emoji-preview { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+.emoji-preview .glyph { font-size: 22px; line-height: 1; }
+.emoji-preview .label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.emoji-tones button { font-size: 16px; }
+.tone-options { display: flex; gap: 1px; }
+.tone-options button.on { background: var(--brand-soft); }
+
+.giphy-grid { flex: 1; min-height: 120px; overflow-y: auto; display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 88px; align-content: start; gap: 6px; }
+.giphy-grid button { min-height: 0; padding: 0; overflow: hidden; border-radius: var(--radius-sm); background: var(--panel-2); border-color: var(--line); }
+.giphy-grid button:hover:not(:disabled) { border-color: var(--brand-line); }
+.giphy-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.giphy-grid.sticker img { object-fit: contain; padding: 4px; }
+.giphy-skeleton { border-radius: var(--radius-sm); background: var(--panel-2); animation: giphy-pulse 1.2s ease-in-out infinite alternate; }
+@keyframes giphy-pulse { to { opacity: 0.45; } }
+html.reduce-motion .giphy-skeleton { animation: none; }
+.giphy-attribution { align-self: center; font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
+.giphy-attribution strong { color: var(--text); font-weight: 800; letter-spacing: 0.06em; }
+
+@media (prefers-reduced-motion: reduce) {
+  .giphy-skeleton, .msg .send-state .spin { animation: none; }
+}

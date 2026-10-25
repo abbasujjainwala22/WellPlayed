@@ -1,0 +1,53 @@
+import type { Rec } from "./recs-api";
+
+/** Display-only examples shown while nobody has recommended anything. Never sent to the server. */
+export const DEMO_RECS: (Rec & { emoji: string })[] = [
+  {
+    id: "demo-1",
+    emoji: "🐋",
+    title: "Whale of a Time",
+    kind: "movie",
+    genre: "Sci-fi adventure",
+    year: 2024,
+    description: "A burnt-out astronaut hitches a ride on a space whale that refuses to stop singing.",
+    poll_question: "Would you ride the whale?",
+    poll_options: ["Instantly", "Only with snacks", "I get seasick in space"],
+    counts: [42, 31, 12],
+  },
+  {
+    id: "demo-2",
+    emoji: "👵",
+    title: "Grandma vs. the Machine",
+    kind: "series",
+    genre: "Comedy",
+    year: 2023,
+    description: "Nana declares war on every smart device in the house. The toaster is next.",
+    poll_question: "Who wins season 2?",
+    poll_options: ["Nana, obviously", "The robot vacuum", "The Wi-Fi router"],
+    counts: [88, 9, 17],
+  },
+  {
+    id: "demo-3",
+    emoji: "🌧️",
+    title: "Neon Rain",
+    kind: "movie",
+    genre: "Noir thriller",
+    year: 2022,
+    description: "A detective with a fear of puddles investigates the wettest city on Earth.",
+    poll_question: "Who did it?",
+    poll_options: ["The umbrella", "The weather guy", "The detective, plot twist"],
+    counts: [23, 40, 35],
+  },
+  {
+    id: "demo-4",
+    emoji: "🐉",
+    title: "Brew & Embers",
+    kind: "series",
+    genre: "Cosy fantasy",
+    year: 2025,
+    description: "A tiny dragon opens a café. Every latte is accidentally flambéed.",
+    poll_question: "Your order?",
+    poll_options: ["Flame-grilled flat white", "Iced (please)", "Whatever the dragon recommends"],
+    counts: [27, 19, 54],
+  },
+].map((r) => ({ ...r, poster_url: "", submitted_by_name: "WellPlayed", created_at: "", mine: false, myVote: null }) as Rec & { emoji: string });

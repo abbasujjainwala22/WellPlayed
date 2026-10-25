@@ -1,0 +1,72 @@
+/* ───────── Animal Chaos: tile overlay ───────── */
+.voice-tile-overlay > .animal-overlay { position: absolute; inset: 0; pointer-events: none; }
+.animal-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.animal-canvas.mirror { transform: scaleX(-1); }
+.animal-chip {
+  position: absolute; left: 6px; top: 6px; display: inline-flex; align-items: center; gap: 5px; max-width: calc(100% - 12px);
+  padding: 2px 8px; border-radius: 6px; background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 11px; font-weight: 600;
+}
+.animal-chip > .truncate { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.has-shake > .animal-chip { max-width: calc(100% - 104px); }
+.animal-chip.error { color: #ffd0d0; pointer-events: auto; }
+.animal-chip > * { flex-shrink: 0; }
+.animal-chip > .truncate { flex-shrink: 1; }
+.animal-chip .spinner.sm { width: 11px; height: 11px; border-width: 2px; }
+.animal-chip button.icon.sm { min-height: 20px; width: 20px; padding: 0; color: #fff; }
+.animal-shake {
+  position: absolute; right: 6px; top: 6px; pointer-events: auto;
+  min-height: 24px; padding: 2px 9px; font-size: 11.5px; border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6); color: #fff; border-color: rgba(255, 255, 255, 0.25);
+}
+.animal-shake:hover:not(:disabled) { background: rgba(0, 0, 0, 0.75); color: #fff; }
+
+/* ───────── Launcher ───────── */
+.animal-launcher { position: relative; }
+.animal-count {
+  position: absolute; top: 2px; right: 2px; min-width: 15px; height: 15px; padding: 0 4px; border-radius: 999px;
+  background: var(--brand); color: #fff; font-size: 10px; font-weight: 700; line-height: 15px; text-align: center;
+}
+
+/* ───────── Dialog ───────── */
+.animal-icon { display: block; flex-shrink: 0; }
+.animal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+.animal-pick {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 8px; height: auto;
+  border-radius: var(--radius); text-align: center; white-space: normal;
+}
+.animal-pick strong { font-size: 13.5px; color: var(--text); }
+.animal-pick .faint { font-size: 11px; line-height: 1.3; }
+.animal-pick:hover:not(:disabled) .animal-icon { transform: scale(1.06); }
+.animal-pick .animal-icon { transition: transform 0.15s ease; }
+.animal-targets { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.animal-target {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; height: auto;
+  padding: 10px 12px; border-radius: var(--radius); text-align: left;
+}
+.animal-target strong { max-width: 100%; color: var(--text); }
+.animal-empty { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: var(--radius); background: var(--panel-2); color: var(--muted); font-size: 13px; }
+.animal-active { padding-top: 14px; border-top: 1px solid var(--line); gap: 10px; }
+.animal-active h3 { margin: 0; font-size: 14px; }
+.animal-active .faint { line-height: 1.45; }
+.animal-active ul.stack { gap: 6px; }
+.animal-effect {
+  display: flex; align-items: center; gap: 10px; padding: 6px 10px 6px 6px; border-radius: var(--radius);
+  background: var(--panel-2); border: 1px solid var(--line);
+}
+.animal-effect .grow { display: flex; flex-direction: column; min-width: 0; }
+.animal-effect strong { font-size: 13.5px; }
+
+/* ───────── Target notice ───────── */
+.animal-notice {
+  position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%); z-index: 55;
+  display: flex; align-items: center; gap: 10px; max-width: calc(100vw - 32px); padding: 8px 8px 8px 10px;
+  background: var(--panel-3); border: 1px solid var(--line-strong); border-radius: 14px; box-shadow: var(--shadow-lg);
+  font-size: 13.5px; color: var(--text); animation: pop 0.2s ease;
+}
+.animal-notice > span { min-width: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animal-notice { animation: none; }
+  .animal-pick .animal-icon { transition: none; }
+  .animal-pick:hover:not(:disabled) .animal-icon { transform: none; }
+}

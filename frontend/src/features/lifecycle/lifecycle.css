@@ -1,0 +1,24 @@
+/* Party lifecycle: leave / end, external fallback, group countdown, speed control. */
+
+.party-dialog-actions { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+
+.external-watch {
+  display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; margin-top: 4px;
+  background: var(--warning-soft); border: 1px solid var(--warning); border-radius: var(--radius);
+}
+.external-watch strong { color: var(--text); font-size: 13.5px; }
+.external-open, .countdown-open {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 550;
+  min-height: 30px; padding: 4px 10px; border-radius: 7px; border: 1px solid var(--line-strong);
+  background: var(--panel-2); color: var(--text);
+}
+.external-open:hover, .countdown-open:hover { text-decoration: none; background: var(--panel-3); }
+
+.group-countdown { background: var(--brand-soft); border-color: var(--brand-line); }
+.group-countdown > svg { color: var(--brand-hover); }
+.group-countdown .countdown { font-size: 18px; color: var(--brand-hover); margin-left: 4px; }
+.group-countdown.go { background: var(--success-soft); border-color: var(--success); }
+.group-countdown.go > svg { color: var(--success); }
+
+.speed-select { min-height: 30px; height: 30px; padding: 2px 26px 2px 8px; font-size: 12.5px; width: auto; }
+.speed-limited { font-size: 12px; }

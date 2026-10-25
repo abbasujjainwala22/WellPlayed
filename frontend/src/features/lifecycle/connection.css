@@ -1,0 +1,18 @@
+/* Room connection notice: floats just under the top bar while the socket is down. */
+.conn-notice {
+  position: fixed;
+  top: calc(var(--topbar-h, 60px) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  width: min(560px, calc(100vw - 24px));
+  margin: 0;
+  box-shadow: var(--shadow);
+  background: var(--panel);
+}
+/* the soft tints are translucent: layer them over the opaque panel so the page doesn't show through */
+.conn-notice.warn { background: linear-gradient(var(--warning-soft), var(--warning-soft)), var(--panel); }
+.conn-notice.danger { background: linear-gradient(var(--danger-soft), var(--danger-soft)), var(--panel); border-color: var(--danger-line); }
+.conn-notice.danger > svg { color: var(--danger); }
+.conn-notice .grow { min-width: 0; flex: 1; }
+.conn-notice button { display: inline-flex; align-items: center; gap: 6px; }

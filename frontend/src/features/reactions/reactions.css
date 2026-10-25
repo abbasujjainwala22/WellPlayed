@@ -1,0 +1,20 @@
+/* Reactions: the "delivered" receipt, and floating emoji that respect reduced motion. Theme tokens only. */
+.reactions { position: relative; }
+.reaction-receipt { position: absolute; left: 50%; bottom: calc(100% - 6px); transform: translateX(-50%); z-index: 2; pointer-events: none; white-space: nowrap; }
+.reaction-receipt > span {
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 6px;
+  font-size: 11.5px; font-weight: 700; color: var(--success); background: var(--panel); border: 1px dashed var(--success);
+  box-shadow: var(--shadow-sm); animation: receipt-in 1.6s ease both;
+}
+@keyframes receipt-in {
+  0% { opacity: 0; transform: translateY(4px) scale(0.92); }
+  12%, 80% { opacity: 1; transform: none; }
+  100% { opacity: 0; }
+}
+
+/* Reduced motion (the OS setting or html.reduce-motion): emoji appear in place and leave with the timer, no flight. */
+@media (prefers-reduced-motion: reduce) {
+  .floaters span, .reaction-receipt > span { animation: none; }
+}
+html.reduce-motion .floaters span,
+html.reduce-motion .reaction-receipt > span { animation: none !important; }
