@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8" />
+<style>
+  body { width: 300px; font: 14px system-ui; padding: 12px; }
+  input { width: 100%; box-sizing: border-box; margin: 4px 0 8px; padding: 6px; }
+  button { padding: 6px 10px; }
+  #status { margin-top: 8px; color: #555; font-size: 12px; }
+  label { font-size: 12px; color: #555; }
+</style>
+<h3 style="margin:0 0 8px">WellPlayed Sync</h3>
+<p style="font-size:12px;color:#555;margin:0 0 8px">Open your streaming service in this tab, start the film, then connect to your room.</p>
+<label>WellPlayed server</label>
+<input id="server" placeholder="http://localhost:8000" />
+<label>Room code</label>
+<input id="code" placeholder="ABC123" maxlength="6" />
+<label>Your member token</label>
+<input id="token" placeholder="paste from the room page (Pair → Extension)" />
+<label><input id="host" type="checkbox" style="width:auto" /> I'm the host (my play/pause/seek control the room)</label><br />
+<button id="connect">Connect this tab</button> <button id="disconnect">Disconnect</button>
+<div id="status"></div>
+<script src="popup.js"></script>

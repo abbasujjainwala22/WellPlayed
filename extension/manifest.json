@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "WellPlayed Sync",
+  "version": "0.1.0",
+  "description": "Keeps the video in this tab in sync with your WellPlayed room. It only controls play, pause and seek; it never reads or copies the stream.",
+  "action": { "default_popup": "popup.html", "default_title": "WellPlayed Sync" },
+  "permissions": ["storage", "activeTab", "scripting", "webNavigation"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    { "matches": ["<all_urls>"], "js": ["sync-core.js", "content.js"], "all_frames": true, "run_at": "document_idle" }
+  ]
+}
