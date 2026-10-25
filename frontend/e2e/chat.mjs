@@ -1,0 +1,23 @@
+// Needs the backend started with WP_TRANSLATOR=mock.  node e2e/chat.mjs
+import { createRequire } from "node:module";
+const { chromium } = createRequire("/opt/node22/lib/node_modules/")("playwright");
+const BASE = process.env.BASE ?? "http://localhost:5173";
+const browser = await chromium.launch({ executablePath: process.env.CHROME ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome" });
+const host = await (await browser.newContext()).newPage();
+const guest = await (await browser.newContext()).newPage();
+await host.goto(BASE);
+await host.getByLabel("Your name").fill("Host");
+await host.getByText("Create room").click();
+await host.waitForURL(/\/room\//);
+const code = host.url().split("/room/")[1];
+await guest.goto(`${BASE}/join/${code}`);
+await guest.getByLabel("Your name").fill("Guest");
+await guest.locator("select").selectOption("es");
+await guest.getByRole("button", { name: "Join", exact: true }).click();
+await guest.waitForURL(/\/room\//);
+await host.getByPlaceholder(/Message the room/).waitFor();
+await host.getByPlaceholder(/Message the room/).fill("hello everyone");
+await host.getByRole("button", { name: "Send" }).click();
+await guest.getByText("[es] hello everyone").waitFor({ timeout: 5000 });
+console.log("CHAT TRANSLATION OK");
+await browser.close();

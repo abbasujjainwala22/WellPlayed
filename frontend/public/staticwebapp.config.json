@@ -1,0 +1,13 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/mediapipe/*", "*.{js,css,svg,png,ico,webm,wasm,json,map}"]
+  },
+  "mimeTypes": {
+    ".wasm": "application/wasm",
+    ".webm": "video/webm"
+  },
+  "routes": [
+    { "route": "/assets/*", "headers": { "cache-control": "public, max-age=31536000, immutable" } }
+  ]
+}

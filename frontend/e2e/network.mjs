@@ -1,0 +1,24 @@
+// Real players report buffer telemetry; the Network tab shows both members.  node e2e/network.mjs
+import { createRequire } from "node:module";
+const { chromium } = createRequire("/opt/node22/lib/node_modules/")("playwright");
+const BASE = process.env.BASE ?? "http://localhost:5173";
+const browser = await chromium.launch({ executablePath: process.env.CHROME ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome", args: ["--autoplay-policy=no-user-gesture-required"] });
+const host = await (await browser.newContext()).newPage();
+const guest = await (await browser.newContext()).newPage();
+await host.goto(BASE);
+await host.getByLabel("Your name").fill("Host");
+await host.getByText("Create room").click();
+await host.waitForURL(/\/room\//);
+const code = host.url().split("/room/")[1];
+await guest.goto(`${BASE}/join/${code}`);
+await guest.getByLabel("Your name").fill("Gus");
+await guest.getByRole("button", { name: "Join", exact: true }).click();
+await guest.waitForURL(/\/room\//);
+await host.getByPlaceholder(/YouTube link/).fill(`${BASE}/demo.webm`);
+await host.getByText("Load", { exact: true }).click();
+await host.getByRole("button", { name: "Network", exact: true }).click();
+await host.getByText(/Gus/).first().waitFor();
+await host.getByText(/s buffered/).first().waitFor({ timeout: 10000 });
+await host.waitForFunction(() => (document.querySelector("aside").innerText.match(/s buffered/g) ?? []).length >= 2, null, { timeout: 15000 });
+console.log("NETWORK PANEL OK");
+await browser.close();
